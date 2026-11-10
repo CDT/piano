@@ -3,7 +3,7 @@
 A short, playable guide to pop piano accompaniment: chords by number, six progressions,
 left-hand patterns, harmonising a melody, colour chords and arranging.
 
-Live: https://cdt.github.io/piano/
+Live: https://cdt.is-a.dev/piano/
 
 Vite, React, Tailwind CSS and shadcn/ui. Audio is synthesised in the browser with Web Audio.
 
