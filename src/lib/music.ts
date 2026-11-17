@@ -239,8 +239,9 @@ export const texture = (id: string) => TEXTURES.find((t) => t.id === id)!
 
 // ---------- sequences ----------
 
-/** Melody note: [beat in bar, length in beats, scale step]. Step 0 = tonic, 7 = tonic an octave up. */
-export type MelNote = [number, number, number]
+/** Melody note: [beat in bar, length in beats, scale step, alteration?]. Step 0 = tonic, 7 = tonic an
+ *  octave up; the optional alteration raises (+1) or lowers (-1) the step by a semitone. */
+export type MelNote = [number, number, number] | [number, number, number, number]
 
 export interface SeqEvent {
   t: number
@@ -248,6 +249,8 @@ export interface SeqEvent {
   midi: number
   hand: Hand
   vel: number
+  /** Melody only: the scale degree (0–6) the note is written on, so chromatic notes spell correctly. */
+  deg?: number
 }
 
 export interface Seq {
@@ -293,8 +296,8 @@ export function buildSeq(o: {
           events.push({ t: at + h.t, d: h.d, midi, hand: 'rh', vel: o.melody ? 0.28 : 0.4 })
       }
     }
-    for (const [t, d, step] of o.melody?.[bar] ?? [])
-      events.push({ t: at + t, d, midi: melodyMidi(step, o.key), hand: 'mel', vel: 0.8 })
+    for (const [t, d, step, alt = 0] of o.melody?.[bar] ?? [])
+      events.push({ t: at + t, d, midi: melodyMidi(step, o.key) + alt, hand: 'mel', vel: 0.8, deg: mod(step, 7) })
     at += tex?.beats ?? 4
   }
   events.sort((a, b) => a.t - b.t)

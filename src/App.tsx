@@ -1,7 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
+import { Music } from 'lucide-react'
 import { Dock } from '@/components/Dock'
 import { cn } from '@/lib/utils'
+import { Repertoire } from '@/repertoire'
 import { Guide, Hero, SECTIONS } from '@/sections'
+
+/** The nine numbered steps, then the repertoire. */
+const NAV = [...SECTIONS, { id: 'repertoire', title: 'Repertoire' }]
+
+function Marker({ i }: { i: number }) {
+  return i < SECTIONS.length ? <>{i + 1}</> : <Music className="size-3.5" aria-hidden />
+}
 
 function useActiveSection() {
   const [active, setActive] = useState('')
@@ -12,7 +21,7 @@ function useActiveSection() {
       },
       { rootMargin: '-30% 0px -60% 0px' },
     )
-    SECTIONS.forEach((s) => {
+    NAV.forEach((s) => {
       const el = document.getElementById(s.id)
       if (el) observer.observe(el)
     })
@@ -33,7 +42,7 @@ function TopNav({ active }: { active: string }) {
       className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur lg:hidden"
     >
       <div className="no-scrollbar flex gap-1 overflow-x-auto px-4 py-2">
-        {SECTIONS.map((s, i) => (
+        {NAV.map((s, i) => (
           <a
             key={s.id}
             href={`#${s.id}`}
@@ -44,7 +53,9 @@ function TopNav({ active }: { active: string }) {
               active === s.id ? 'bg-pine text-white' : 'text-muted-foreground',
             )}
           >
-            <span className={cn('font-heading font-bold', active === s.id && 'text-mel')}>{i + 1}</span>
+            <span className={cn('font-heading font-bold', active === s.id && 'text-mel')}>
+              <Marker i={i} />
+            </span>
             {s.title}
           </a>
         ))}
@@ -63,7 +74,7 @@ function SideNav({ active }: { active: string }) {
         by Ear
       </a>
       <ol className="space-y-0.5">
-        {SECTIONS.map((s, i) => (
+        {NAV.map((s, i) => (
           <li key={s.id}>
             <a
               href={`#${s.id}`}
@@ -73,7 +84,9 @@ function SideNav({ active }: { active: string }) {
                 active === s.id ? 'bg-pine font-semibold text-white' : 'text-muted-foreground hover:text-foreground',
               )}
             >
-              <span className={cn('w-3 font-heading font-bold', active === s.id && 'text-mel')}>{i + 1}</span>
+              <span className={cn('w-3 font-heading font-bold', active === s.id && 'text-mel')}>
+                <Marker i={i} />
+              </span>
               {s.title}
             </a>
           </li>
@@ -93,9 +106,10 @@ export default function App() {
         <main className="min-w-0 flex-1 pb-48">
           <Hero />
           <Guide />
+          <Repertoire />
           <footer className="border-t border-border py-8 text-sm text-muted-foreground">
-            The practice tune and all audio are generated in your browser. Song titles are suggestions for practice;
-            no scores are reproduced here.
+            All audio is generated in your browser. The practice tune and accompaniments are original; repertoire
+            melodies are original or in the public domain. Other song titles are suggestions for practice only.
           </footer>
         </main>
       </div>

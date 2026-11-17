@@ -35,11 +35,13 @@ Three layers, each depending only on the one above it:
    - `src/components/kit.tsx` — shared pieces: `Section`, `Panel`, `Tip`, `PlayButton`, `ChordChip`, `Progression`, `BeatGrid`, and the `useSeqPlay(id, label, build)` hook that every playable example uses.
    - `src/components/Dock.tsx` — the fixed bottom bar: SVG keyboard (C2–G6), key selector, tempo. Melody, voicing and ladder ranges in `music.ts` are chosen to stay inside this keyboard range.
    - `src/sections.tsx` — all tutorial copy and the nine sections, plus the `SECTIONS` list that `App.tsx` uses for navigation and scroll-spy.
+   - `src/repertoire.tsx` + `src/lib/repertoire.ts` — the Repertoire area after the nine steps: complete pieces made of `Part`s (chords, texture(s), melody, `how` it uses the guide). `buildPiece(piece, key, parts?, opts?)` concatenates parts into one `Seq`, optionally as a partial version (melody only, block chords, left hand only) for lesson demos; `pieceAbc` converts that `Seq` to grand-staff ABC (voice 1 melody, 2 RH chords, 3 LH) with chord names above and numerals below. Each piece gets a step-by-step lesson in `repertoire.tsx` that walks the guide's steps in order, linking each to its section, with a playable `Demo` per step; lesson copy must stay key-neutral (use `scaleNames(key)` / `chordName`, not fixed note names).
+   - `src/components/Score.tsx` — renders ABC with abcjs (loaded on demand), tags each note with `data-bar`, and fades other bars while playing. Voice colours come from `.score` rules in `index.css`.
    - `src/components/ui/` — shadcn-generated components (Base UI flavour, `base-nova` style). Add more with `npx shadcn@latest add <name>`.
 
 ## Conventions
 
-- **Content limit:** the guide is intentionally capped at ten sections (currently nine) and kept concise. Extend an existing section before adding a new one.
+- **Content limit:** the guide is intentionally capped at ten sections (currently nine) and kept concise. Extend an existing section before adding a new one. The Repertoire is separate from that count; its melodies must be original or in the public domain (e.g. Bizet), never transcribed from a copyrighted song; accompaniments are always new, built from the nine steps. `MelNote` takes an optional fourth value (+1/-1) for chromatic notes.
 - **Mobile first:** every layout must work at phone width with no horizontal page scroll; wide content scrolls inside its own container. `main` keeps bottom padding so the dock never covers content.
 - **Colour encodes the musical layer:** `lh` (blue) = left hand, `rh` (red) = right-hand chord, `mel` (brass) = melody. Tokens are defined in `src/index.css` (`--lh`, `--rh`, `--mel` and their `-ink` text variants); don't use these colours decoratively. The theme is light-only.
 - **Typography:** Bricolage Grotesque for headings (`font-heading`), Instrument Sans for body, both self-hosted via `@fontsource-variable`.

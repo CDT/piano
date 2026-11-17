@@ -107,3 +107,28 @@
   scrollbar-width: none;
   &::-webkit-scrollbar { display: none; }
 }
+
+/* Score: each voice takes its layer colour; while playing, bars other than the current one fade. */
+.score svg {
+  display: block;
+}
+.score .abcjs-note.abcjs-v0 {
+  fill: var(--mel-ink);
+  stroke: var(--mel-ink);
+}
+.score .abcjs-note.abcjs-v1 {
+  fill: var(--rh-ink);
+  stroke: var(--rh-ink);
+}
+.score .abcjs-note.abcjs-v2 {
+  fill: var(--lh-ink);
+  stroke: var(--lh-ink);
+}
+.score .abcjs-note,
+.score .abcjs-rest {
+  transition: opacity 120ms;
+}
+.score[data-playing] .abcjs-note:not(.is-current),
+.score[data-playing] .abcjs-rest:not(.is-current) {
+  opacity: 0.28;
+}
